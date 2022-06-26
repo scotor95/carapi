@@ -19,7 +19,7 @@ class CreateAd
         $this->models = $models;
     }
 
-    public function __invoke($data)
+    public function __invoke($data): ?Advert
     {
         $ad = new Advert();
         $ad->setCategory($data['category']);

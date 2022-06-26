@@ -4,7 +4,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Assert\Assert;
 
 /**
  * Advert
@@ -60,7 +59,8 @@ class Category
      */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        if(in_array($name, self::CATEGORY_NAMES))
+            $this->name = $name;
         return $this;
     }
 

@@ -20,10 +20,9 @@ class AdvertController extends AbstractController
 
     /**
      * @param Request $request
-     * @Route("/adverts", name="adverts_list", methods={"GET"})
+     * @param AdvertRepository $advertRepository
      * @return Response
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @Route("/adverts", name="adverts_list", methods={"GET"})
      */
     public function getAdvertsAction(
         Request $request,
@@ -40,16 +39,17 @@ class AdvertController extends AbstractController
     /**
      * @Route("/adverts", name="adverts_create", methods={"POST"})
      * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param CreateAd $createAd
      * @return Response
      */
     public function addAdvertsAction(
         Request $request,
         EntityManagerInterface $entityManager,
         CreateAd $createAd
-    )
+    ): Response
     {
         $request = json_decode($request->getContent(), true);
-        //dump($request);
         $categoryId = isset($request['category']) ? $request['category']: null;
         if(!$categoryId) return $this->json(['error' => "absence d'une categorie"]);
         $category = $entityManager->getRepository(Category::class)->find($categoryId);
@@ -81,7 +81,7 @@ class AdvertController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         UpdateAd $updateAd
-    )
+    ): Response
     {
         $advert = $entityManager->getRepository(Advert::class)->find($id);
         if($advert){
@@ -111,12 +111,13 @@ class AdvertController extends AbstractController
     /**
      * @Route("/adverts/{id}", name="advert_delete", methods={"DELETE"})
      * @param string $id
+     * @param EntityManagerInterface $entityManager
      * @return Response
      */
     public function deleteAdvertsAction(
         string $id,
         EntityManagerInterface $entityManager
-    )
+    ): Response
     {
         $advert = $entityManager->getRepository(Advert::class)->find($id);
         if($advert){
